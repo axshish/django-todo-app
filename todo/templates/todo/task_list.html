@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .task-title {
+            font-size: 15px;
+        }
+
+        .completed {
+            color: #888;
+            text-decoration: line-through;
+        }
+
+        .actions a {
+            text-decoration: none;
+            margin-left: 8px;
+            font-size: 16px;
+        }
+
+        .actions a:hover {
+            opacity: 0.7;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>My Todo List</h2>
+
+        <form method="POST" action="{% url 'add_task' %}">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Enter a new task..." required>
+            <button type="submit">Add</button>
+        </form>
+
+        <ul>
+            {% for task in tasks %}
+                <li>
+                    <span class="task-title {% if task.completed %}completed{% endif %}">
+                        {{ task.title }}
+                    </span>
+
+                    <div class="actions">
+                        <a href="{% url 'update_task' task.id %}" title="Mark complete">✔</a>
+                        <a href="{% url 'delete_task' task.id %}" title="Delete">❌</a>
+                    </div>
+                </li>
+            {% empty %}
+                <p class="empty">No tasks added yet.</p>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
